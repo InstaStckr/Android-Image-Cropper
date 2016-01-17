@@ -56,9 +56,9 @@ public class CropImageView extends FrameLayout {
      */
     private final ProgressBar mProgressBar;
 
-    private Bitmap mBitmap;
+    public Bitmap mBitmap;
 
-    private int mDegreesRotated = 0;
+    public int mDegreesRotated = 0;
 
     private int mLayoutWidth;
 
@@ -85,12 +85,12 @@ public class CropImageView extends FrameLayout {
     /**
      * The URI that the image was loaded from (if loaded from URI)
      */
-    private Uri mLoadedImageUri;
+    public Uri mLoadedImageUri;
 
     /**
      * The sample size the image was loaded by if was loaded by URI
      */
-    private int mLoadedSampleSize = 1;
+    public int mLoadedSampleSize = 1;
 
     /**
      * Task used to load bitmap async from UI thread
