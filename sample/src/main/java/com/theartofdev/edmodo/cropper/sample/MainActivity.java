@@ -1,16 +1,21 @@
 
 package com.theartofdev.edmodo.cropper.sample;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.ComponentName;
+import android.content.ContentResolver;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.provider.MediaStore;
+import android.system.ErrnoException;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.AdapterView;
@@ -29,6 +34,8 @@ import com.example.croppersample.R;
 import com.theartofdev.edmodo.cropper.CropImageView;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -53,6 +60,8 @@ public class MainActivity extends Activity implements CropImageView.OnSetImageUr
     private int mAspectRatioY = DEFAULT_ASPECT_RATIO_VALUES;
 
     Bitmap croppedImage;
+
+    private Uri mCropImageUri;
     //endregion
 
     // Saves the state upon rotating the screen/restarting the activity
@@ -170,7 +179,17 @@ public class MainActivity extends Activity implements CropImageView.OnSetImageUr
         // Sets up the Spinner
         showGuidelinesSpin.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                mCropImageView.setGuidelines(i);
+                switch (i) {
+                    case 0:
+                        mCropImageView.setGuidelines(CropImageView.Guidelines.OFF);
+                        break;
+                    case 1:
+                        mCropImageView.setGuidelines(CropImageView.Guidelines.ON_TOUCH);
+                        break;
+                    case 2:
+                        mCropImageView.setGuidelines(CropImageView.Guidelines.ON);
+                        break;
+                }
             }
 
             public void onNothingSelected(AdapterView<?> adapterView) {
@@ -231,9 +250,10 @@ public class MainActivity extends Activity implements CropImageView.OnSetImageUr
     @Override
     public void onSetImageUriComplete(CropImageView view, Uri uri, Exception error) {
         if (error == null) {
-            Toast.makeText(mCropImageView.getContext(), "Image load successful", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Image load successful", Toast.LENGTH_SHORT).show();
         } else {
-            Toast.makeText(mCropImageView.getContext(), "Image load failed: " + error.getMessage(), Toast.LENGTH_LONG).show();
+            Log.e("AIC", "Failed to load image by URI", error);
+            Toast.makeText(this, "Image load failed: " + error.getMessage(), Toast.LENGTH_LONG).show();
         }
     }
 
@@ -244,7 +264,8 @@ public class MainActivity extends Activity implements CropImageView.OnSetImageUr
             ImageView croppedImageView = (ImageView) findViewById(R.id.croppedImageView);
             croppedImageView.setImageBitmap(croppedImage);
         } else {
-            Toast.makeText(mCropImageView.getContext(), "Image crop failed: " + error.getMessage(), Toast.LENGTH_LONG).show();
+            Log.e("AIC", "Failed to crop image", error);
+            Toast.makeText(this, "Image crop failed: " + error.getMessage(), Toast.LENGTH_LONG).show();
         }
     }
 
@@ -252,7 +273,32 @@ public class MainActivity extends Activity implements CropImageView.OnSetImageUr
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == Activity.RESULT_OK) {
             Uri imageUri = getPickImageResultUri(data);
-            ((CropImageView) findViewById(R.id.CropImageView)).setImageUriAsync(imageUri);
+
+            // For API >= 23 we need to check specifically that we have permissions to read external storage,
+            // but we don't know if we need to for the URI so the simplest is to try open the stream and see if we get error.
+            boolean requirePermissions = false;
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M &&
+                    checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED &&
+                    isUriRequiresPermissions(imageUri)) {
+
+                // request permissions and handle the result in onRequestPermissionsResult()
+                requirePermissions = true;
+                mCropImageUri = imageUri;
+                requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 0);
+            }
+
+            if (!requirePermissions) {
+                ((CropImageView) findViewById(R.id.CropImageView)).setImageUriAsync(imageUri);
+            }
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+        if (mCropImageUri != null && grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            ((CropImageView) findViewById(R.id.CropImageView)).setImageUriAsync(mCropImageUri);
+        } else {
+            Toast.makeText(this, "Required permissions are not granted", Toast.LENGTH_LONG).show();
         }
     }
 
@@ -332,10 +378,28 @@ public class MainActivity extends Activity implements CropImageView.OnSetImageUr
      */
     public Uri getPickImageResultUri(Intent data) {
         boolean isCamera = true;
-        if (data != null) {
+        if (data != null && data.getData() != null) {
             String action = data.getAction();
             isCamera = action != null && action.equals(MediaStore.ACTION_IMAGE_CAPTURE);
         }
         return isCamera ? getCaptureImageOutputUri() : data.getData();
+    }
+
+    /**
+     * Test if we can open the given Android URI to test if permission required error is thrown.<br>
+     */
+    public boolean isUriRequiresPermissions(Uri uri) {
+        try {
+            ContentResolver resolver = getContentResolver();
+            InputStream stream = resolver.openInputStream(uri);
+            stream.close();
+            return false;
+        } catch (FileNotFoundException e) {
+            if (e.getCause() instanceof ErrnoException) {
+                return true;
+            }
+        } catch (Exception e) {
+        }
+        return false;
     }
 }

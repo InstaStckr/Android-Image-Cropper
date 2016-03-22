@@ -20,14 +20,11 @@ import android.widget.ImageView;
 /**
  * Defaults used in the library.
  */
-class Defaults {
+final class CropDefaults {
 
     public static final Rect EMPTY_RECT = new Rect();
 
     public static final RectF EMPTY_RECT_F = new RectF();
-
-    // Sets the default image guidelines to show when resizing
-    public static final int DEFAULT_GUIDELINES = 1;
 
     public static final boolean DEFAULT_FIXED_ASPECT_RATIO = false;
 
@@ -39,22 +36,30 @@ class Defaults {
 
     public static final int DEFAULT_CROP_SHAPE_INDEX = 0;
 
+    public static final int DEFAULT_GUIDELINES_INDEX = 1;
+
+    public static final float MIN_CROP_WINDOW_SIZE = 42;
+
+    public static final float MIN_CROP_RESULT_SIZE = 80;
+
+    public static final float MAX_CROP_RESULT_SIZE = 99999;
+
     public static final float SNAP_RADIUS = 3;
 
     public static final float DEFAULT_SHOW_GUIDELINES_LIMIT = 100;
-
-    public static final int GUIDELINES_ON_TOUCH = 1;
-
-    public static final int GUIDELINES_ON = 2;
 
     public static final ImageView.ScaleType[] VALID_SCALE_TYPES = new ImageView.ScaleType[]{ImageView.ScaleType.CENTER_INSIDE, ImageView.ScaleType.FIT_CENTER};
 
     public static final CropImageView.CropShape[] VALID_CROP_SHAPES = new CropImageView.CropShape[]{CropImageView.CropShape.RECTANGLE, CropImageView.CropShape.OVAL};
 
+    public static final CropImageView.Guidelines[] VALID_GUIDELINES = new CropImageView.Guidelines[]{CropImageView.Guidelines.OFF, CropImageView.Guidelines.ON_TOUCH, CropImageView.Guidelines.ON};
+
     // The radius (in dp) of the touchable area around the handle. We are basing
     // this value off of the recommended 48dp Rhythm. See:
     // http://developer.android.com/design/style/metrics-grids.html#48dp-rhythm
-    public static final int TARGET_RADIUS = 24;
+    public static final int TOUCH_RADIUS = 24;
+
+    public static final float DEFAULT_INITIAL_CROP_WINDOW_PADDING_RATIO = 0.1f;
 
     public static final float DEFAULT_BORDER_LINE_THICKNESS = 3;
 
@@ -62,7 +67,7 @@ class Defaults {
 
     public static final float DEFAULT_BORDER_CORNER_OFFSET = 5;
 
-    public static final float DEFAULT_BORDER_CORNER_LENGTH = 15;
+    public static final float DEFAULT_BORDER_CORNER_LENGTH = 14;
 
     public static final float DEFAULT_GUIDELINE_THICKNESS = 1;
 

@@ -20,34 +20,51 @@ Image cropping tool, displays a resizable, rectengular/oval crop window on top o
 - Set image Scale type in the cropping image view: center or fit.
 - Control the appearance of guidelines in the crop window.
 - Control cropping window aspect ratio, ability to fix it (squared).
+- Customization for border line, border corner, guidelines and background.
+- Set result image min/max limits in pixels.
 - Auto rotate bitmap by provided Exif data or loading from Android URI.
 - Rotate image API to allow the user to rotate the image during cropping.
 - Get cropping rectangle or the cropped bitmap.
 - Supported on API Level 10 and above.
 
-For more information, see the [linked Github Wiki page](https://github.com/ArthurHub/Android-Image-Cropper/wiki/Android-Image-Cropper). 
+For more information, see the [linked Github Wiki page](https://github.com/ArthurHub/Android-Image-Cropper/wiki). 
 
 ![ScreenShot](https://github.com/ArthurHub/Android-Image-Cropper/blob/master/demo.jpg?raw=true)
 
 ## Gradle
 ```
-compile 'com.theartofdev.edmodo:android-image-cropper:1.1.+'
+compile 'com.theartofdev.edmodo:android-image-cropper:1.2.+'
 ```
 
 ## Posts
  - [Android cropping image from camera or gallery](http://theartofdev.com/2015/02/15/android-cropping-image-from-camera-or-gallery/)
+ - [Android Image Cropper async support and custom progress UI](http://theartofdev.com/2016/01/15/android-image-cropper-async-support-and-custom-progress-ui/)
 
 ## Change log
-*1.1.0*
-- Deprecated `setImageUri(Uri)`.
-- Added `setImageUriAsync(Uri)` and `getCroppedImageAsync()` for better handling of slow image loading/decode/cropping.
-- Fixed Save/Restore state handling, proper orientation change expirience.
-- Bug fixes on rotation and bitmap recycled error.
+*1.2.2 (beta)*
+ * Fix `setShowCropOverlay(boolean)` not working properly.
+ * Fix crop window bounds issue when cropping image is too small relative to min/max bounds with fixed aspect ratio.
+ * Fix crop window reset on on-screen keyboard show/hide.
 
-*1.0.7*
- - Added `setSnapRadius(float)` allowing to disable snap by setting 0.
- - Nicer rectengular crop border.
- - Fix oval shape rendering on old devices by disabling hardware rendering when required.
+*1.2.1 (beta)*
+
+ * Fix crop window resize bug with fixed aspect ratio
+ * Add `getRotatedDegrees()` to get how much the image was rotated during cropping
+ * Add `setCropRect(Rect)` to set initial cropping window location and size to specific window on the image.
+
+*1.2.0 (beta)*
+
+Due too large changes in the internals please consider this a **beta** release, if you use it be sure to test is thoroughly and report any bugs you find (report no bugs will also be awesome) or use 1.1.0 until I feel 1.2.* is stable enough.
+- Rewrite internal crop window handling.
+-  Add `crop` prefix to all customization resources to prevent naming collision (**breaking change**).
+- Add `CropImageView.Guidelines` enum of guidelines config instead of integer (**breaking change**).
+- Change custom attributes types to `dimension` where appropriate (**breaking change**).
+- Add `showCropOverlay` attribute and `setShowCropOverlay(boolean)` method allowing to hide/show crop overlay UI for animation or element transition.
+- Add `cropInitialCropWindowPaddingRatio` customization [0 - 0.5) to control initial crop window padding from image borders relative to image size.
+- Add min limit config on cropping window width/height in the UI (`cropMinCropWindowWidth`, `cropMinCropWindowHeight`)
+- Add min/max config on cropping image result width/height (`cropMinCropResultWidthPX`,`cropMinCropResultHeightPX`,`cropMaxCropResultWidthPX`,`cropMaxCropResultHeightPX`)
+
+See [full change log](https://github.com/ArthurHub/Android-Image-Cropper/wiki/Change-Log).
 
 ## License
 Forked from [edmodo/cropper](https://github.com/edmodo/cropper) fixing some bugs and adding some features.

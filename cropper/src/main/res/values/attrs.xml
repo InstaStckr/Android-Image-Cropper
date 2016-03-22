@@ -1,12 +1,12 @@
 <resources>
 
     <declare-styleable name="CropImageView">
-        <attr name="guidelines">
+        <attr name="cropGuidelines">
             <enum name="on" value="2"/>
             <enum name="onTouch" value="1"/>
             <enum name="off" value="0"/>
         </attr>
-        <attr name="scaleType">
+        <attr name="cropScaleType">
             <enum name="centerInside" value="0"/>
             <enum name="fitCenter" value="1"/>
         </attr>
@@ -14,20 +14,29 @@
             <enum name="rectangle" value="0"/>
             <enum name="oval" value="1"/>
         </attr>
-        <attr name="fixAspectRatio" format="boolean"/>
-        <attr name="aspectRatioX" format="integer"/>
-        <attr name="aspectRatioY" format="integer"/>
-        <attr name="borderLineThickness" format="float"/>
-        <attr name="borderLineColor" format="color"/>
-        <attr name="borderCornerThickness" format="float"/>
-        <attr name="borderCornerOffset" format="float"/>
-        <attr name="borderCornerLength" format="float"/>
-        <attr name="borderCornerColor" format="color"/>
-        <attr name="guidelinesThickness" format="float"/>
-        <attr name="guidelinesColor" format="color"/>
-        <attr name="backgroundColor" format="color"/>
-        <attr name="snapRadius" format="float"/>
-        <attr name="showProgressBar" format="boolean"/>
+        <attr name="cropFixAspectRatio" format="boolean"/>
+        <attr name="cropAspectRatioX" format="integer"/>
+        <attr name="cropAspectRatioY" format="integer"/>
+        <attr name="cropInitialCropWindowPaddingRatio" format="float"/>
+        <attr name="cropBorderLineThickness" format="dimension"/>
+        <attr name="cropBorderLineColor" format="color"/>
+        <attr name="cropBorderCornerThickness" format="dimension"/>
+        <attr name="cropBorderCornerOffset" format="dimension"/>
+        <attr name="cropBorderCornerLength" format="dimension"/>
+        <attr name="cropBorderCornerColor" format="color"/>
+        <attr name="cropGuidelinesThickness" format="dimension"/>
+        <attr name="cropGuidelinesColor" format="color"/>
+        <attr name="cropBackgroundColor" format="color"/>
+        <attr name="cropSnapRadius" format="dimension"/>
+        <attr name="cropTouchRadius" format="dimension"/>
+        <attr name="cropShowCropOverlay" format="boolean"/>
+        <attr name="cropShowProgressBar" format="boolean"/>
+        <attr name="cropMinCropWindowWidth" format="dimension"/>
+        <attr name="cropMinCropWindowHeight" format="dimension"/>
+        <attr name="cropMinCropResultWidthPX" format="float"/>
+        <attr name="cropMinCropResultHeightPX" format="float"/>
+        <attr name="cropMaxCropResultWidthPX" format="float"/>
+        <attr name="cropMaxCropResultHeightPX" format="float"/>
     </declare-styleable>
 
 </resources>
