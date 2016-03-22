@@ -39,7 +39,7 @@ import java.io.InputStream;
 /**
  * Utility class that deals with operations with an ImageView.
  */
-final class BitmapUtils {
+public class BitmapUtils {
 
     /**
      * Gets the rectangular position of a Bitmap if it were placed inside a View.
